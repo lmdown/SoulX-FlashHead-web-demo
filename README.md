@@ -10,7 +10,7 @@
 <sup>&#9993;</sup>Corresponding Author
 
 
-<a href='https://soul-ailab.github.io/soulx-flashhead/' target="_blank"><img src='https://img.shields.io/badge/Project-Page-green'></a> <a href='https://arxiv.org/abs/2602.07449' target="_blank"><img src='https://img.shields.io/badge/Technical-Report-red'></a>
+<a href='https://soul-ailab.github.io/soulx-flashhead/' target="_blank"><img src='https://img.shields.io/badge/Project-Page-green'></a> <a href='https://arxiv.org/pdf/2602.07449' target="_blank"><img src='https://img.shields.io/badge/Technical-Report-red'></a>
 <a href='https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B' target="_blank"><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue'></a>
 <a href="https://huggingface.co/datasets/Soul-AILab/VividHead" target="_blank"><img src="https://img.shields.io/badge/🤗 Hugging Face-Dataset-blue" alt="Dataset"></a>&nbsp;
 </div>
@@ -25,7 +25,7 @@
 - **2026.02.12** - We have released the [inference code](https://github.com/Soul-AILab/SoulX-FlashHead), and the [model weights](https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B).
 - **2026.02.12** - We released **Project page** on [SoulX-FlashHead](https://soul-ailab.github.io/soulx-flashhead/).
 - **2026.02.07** - We released [Dataset](https://huggingface.co/datasets/Soul-AILab/VividHead).
-- **2026.02.07** - We released **SoulX-FlashHead Technical Report** on [Arxiv](https://arxiv.org/pdf/2512.23379) and [GitHub repository](./assets/SoulX_FlashHead.pdf).
+- **2026.02.07** - We released **SoulX-FlashHead Technical Report** on [Arxiv](https://arxiv.org/pdf/2602.07449) and [GitHub repository](./assets/SoulX_FlashHead.pdf).
 
 
 ## 📑 Todo List
