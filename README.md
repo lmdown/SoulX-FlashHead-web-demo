@@ -187,5 +187,4 @@ If you find our work useful in your research, please consider citing:
 > If you find our work useful, please also consider starring the original repositories of these foundational methods.
 
 ## 💡 Star History
-
 [![Star History Chart](https://api.star-history.com/svg?repos=Soul-AILab/SoulX-FlashHead&type=date&legend=top-left)](https://www.star-history.com/#Soul-AILab/SoulX-FlashHead&type=date&legend=top-left)
