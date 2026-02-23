@@ -177,7 +177,7 @@ def generate(args):
             output_dir = 'sample_results'
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            timestamp = datetime.now().strftime("%Y%m%d-%H:%M:%S-%f")[:-3]
+            timestamp = datetime.now().strftime("%Y%m%d-%H-%M-%S-%f")[:-3]
             filename = f"res_{timestamp}.mp4"
             filepath = os.path.join(output_dir, filename)
             args.save_file = filepath
