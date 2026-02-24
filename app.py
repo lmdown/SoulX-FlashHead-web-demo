@@ -145,7 +145,10 @@ def generate_video_gradio(cond_image, audio_file, model_type, base_seed, use_fac
         elapsed = time.time() - start_time
         current_progress = 0.15 + (chunk_idx + 1) / total_slices * 0.75
         progress(current_progress, desc=_t("generating_progress").format(chunk_idx+1, total_slices, elapsed))
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        elif torch.backends.mps.is_available():
+            torch.mps.empty_cache()
     
     progress(0.9, desc=_t("saving"))
     video_path = save_video_temp(generated_list, audio_file, fps=tgt_fps)

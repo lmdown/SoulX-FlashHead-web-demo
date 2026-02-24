@@ -7,3 +7,5 @@ examples/
 sample_results/
 models/
 tools/
+
+venv/

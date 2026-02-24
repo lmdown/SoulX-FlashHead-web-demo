@@ -17,7 +17,8 @@ from flash_head.utils.facecrop import process_image
 
 # compile models to speedup inference
 import platform
-if platform.system() == "Windows":
+import torch
+if platform.system() == "Windows" or (torch.backends.mps.is_available()):
     COMPILE_MODEL = False
     COMPILE_VAE = False
 else:
@@ -131,9 +132,10 @@ class FlashHeadPipeline:
         self.num_timesteps = num_timesteps
         self.use_timestep_transform = use_timestep_transform
 
-        if COMPILE_MODEL:
+        is_mps_device = self.device == "mps" or (isinstance(self.device, torch.device) and self.device.type == "mps")
+        if COMPILE_MODEL and not is_mps_device:
             self.model = torch.compile(self.model)
-        if COMPILE_VAE:
+        if COMPILE_VAE and not is_mps_device:
             if self.use_ltx:
                 self.vae.model.encode = torch.compile(self.vae.model.encode)
                 self.vae.model.decode = torch.compile(self.vae.model.decode)
@@ -247,7 +249,10 @@ class FlashHeadPipeline:
                 generator=self.generator)
 
             for i in range(len(self.timesteps)-1):
-                torch.cuda.synchronize()
+                if torch.cuda.is_available():
+                    torch.cuda.synchronize()
+                elif torch.backends.mps.is_available():
+                    torch.mps.synchronize()
                 start_time = time.time()
 
                 noise[:, :self.latent_motion_frames.shape[1]] = self.latent_motion_frames
@@ -281,38 +286,59 @@ class FlashHeadPipeline:
 
                     noise = (1 - t_i_1) * x_0 + t_i_1 * torch.randn(x_0.size(), dtype=x_0.dtype, device=self.device, generator=self.generator)
 
-                torch.cuda.synchronize()
+                if torch.cuda.is_available():
+                    torch.cuda.synchronize()
+                elif torch.backends.mps.is_available():
+                    torch.mps.synchronize()
                 end_time = time.time()
                 if self.rank == 0:
                     print(f'[generate] model denoise per step: {end_time - start_time}s')
 
             noise[:, :self.latent_motion_frames.shape[1]] = self.latent_motion_frames
 
-            torch.cuda.synchronize()
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+            elif torch.backends.mps.is_available():
+                torch.mps.synchronize()
             start_decode_time = time.time()
 
             videos = self.vae.decode(noise)
 
-            torch.cuda.synchronize()
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+            elif torch.backends.mps.is_available():
+                torch.mps.synchronize()
             end_decode_time = time.time()
             if self.rank == 0:
                 print(f'[generate] decode video frames: {end_decode_time - start_decode_time}s')
         
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        elif torch.backends.mps.is_available():
+            torch.mps.synchronize()
         start_color_correction_time = time.time()
         if self.color_correction_strength > 0.0:
             videos = match_and_blend_colors_torch(videos, self.original_color_reference, self.color_correction_strength)
 
         cond_frame = videos[:, :, -self.motion_frames_num:].to(self.device)
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        elif torch.backends.mps.is_available():
+            torch.mps.synchronize()
         end_color_correction_time = time.time()
         if self.rank == 0:
             print(f'[generate] color correction: {end_color_correction_time - start_color_correction_time}s')
 
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        elif torch.backends.mps.is_available():
+            torch.mps.synchronize()
         start_encode_time = time.time()
         self.latent_motion_frames = self.vae.encode(cond_frame)
-        torch.cuda.synchronize()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+        elif torch.backends.mps.is_available():
+            torch.mps.synchronize()
         end_encode_time = time.time()
         if self.rank == 0:
             print(f'[generate] encode motion frames: {end_encode_time - start_encode_time}s')

@@ -67,8 +67,8 @@ def flash_attention(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, num_heads
     return x
 
 def sinusoidal_embedding_1d(dim, position):
-    sinusoid = torch.outer(position.type(torch.float64), torch.pow(
-        10000, -torch.arange(dim//2, dtype=torch.float64, device=position.device).div(dim//2)))
+    sinusoid = torch.outer(position.type(torch.float32), torch.pow(
+        10000, -torch.arange(dim//2, dtype=torch.float32, device=position.device).div(dim//2)))
     x = torch.cat([torch.cos(sinusoid), torch.sin(sinusoid)], dim=1)
     return x.to(position.dtype)
 
@@ -84,7 +84,7 @@ def precompute_freqs_cis_3d(dim: int, end: int = 1024, theta: float = 10000.0):
 def precompute_freqs_cis(dim: int, end: int = 1024, theta: float = 10000.0):
     # 1d rope precompute
     freqs = 1.0 / (theta ** (torch.arange(0, dim, 2)
-                   [: (dim // 2)].double() / dim))
+                   [: (dim // 2)].float() / dim))
     freqs = torch.outer(torch.arange(end, device=freqs.device), freqs)
     freqs_cis = torch.polar(torch.ones_like(freqs), freqs)  # complex64
     return freqs_cis
@@ -117,7 +117,7 @@ def rope_apply(x, freqs, grid_sizes, use_usp=False, sp_size=1, sp_rank=0):
     seq_len = f * h * w
 
     # precompute multipliers
-    x_i = torch.view_as_complex(x[0, :s].to(torch.float64).reshape(
+    x_i = torch.view_as_complex(x[0, :s].to(torch.float32).reshape(
         s, n, -1, 2)) # [L, N, C/2] # 极坐标
     freqs_i = torch.cat([
         freqs[0][:f].view(f, 1, 1, -1).expand(f, h, w, -1),
