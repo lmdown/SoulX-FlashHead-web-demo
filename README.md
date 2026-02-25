@@ -1,3 +1,44 @@
+# 中文说明
+
+我们对原项目仅做了一些简单的修改，包括：
+
+1. 针对 Mac 和 Windows，修改依赖库；
+2. 修复了一些 bug，如在 Windows 无法保存生成结果的问题；
+3. 增加了 Web Demo 示例，可在本地浏览器中运行；
+4. 增加了对 Mac 系统 MPS 的支持；
+
+## 无需命令，一键安装
+
+推荐使用 魔当 (LM Downloader) https://seemts.com/ 一键安装。同时支持 Windows 和 macOS。
+
+在详情页右侧，可以看到精度选项，根据你的显卡显存选择合适精度。
+<img src="./lmd-assets/detail.webp" width="90%">
+
+<img src="./lmd-assets/running.webp" width="90%">
+
+## 源码运行
+
+```bash
+git clone https://github.com/lmdown/SoulX-FlashHead-web-demo
+cd SoulX-FlashHead-web-demo
+
+conda create -n soulx-flashhead python=3.11
+conda activate soulx-flashhead
+
+conda install -c conda-forge ffmpeg==7
+
+# 在Windows系统中安装依赖
+pip install -r requirements-windows.txt
+# 如果是Mac系统，安装依赖
+pip install -r requirements-mac.txt
+# 运行Web Demo
+python app.py
+```
+
+当然也可以参考原始的readme文档，使用官方推荐的推理脚本。
+
+-------
+
 <div align="center">
 
 
