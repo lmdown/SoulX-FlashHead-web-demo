@@ -11,7 +11,6 @@
 
 推荐使用 魔当 (LM Downloader) https://seemts.com/ 一键安装。同时支持 Windows 和 macOS。
 
-在详情页右侧，可以看到精度选项，根据你的显卡显存选择合适精度。
 <img src="./lmd-assets/detail.webp" width="90%">
 
 <img src="./lmd-assets/running.webp" width="90%">
